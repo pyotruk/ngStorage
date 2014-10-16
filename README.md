@@ -10,8 +10,8 @@ An [AngularJS](https://github.com/angular/angular.js) module that makes Web Stor
 * **sessionStorage** - We got this often-overlooked buddy covered.
 
 * **Cleanly-Authored Code** - Written in the *Angular Way*, well-structured with testability in mind.
- 
-* **No Cookie Fallback** - With Web Storage being [readily available](http://caniuse.com/namevalue-storage) in [all the browsers AngularJS officially supports](http://docs.angularjs.org/misc/faq#canidownloadthesourcebuildandhosttheangularjsenvironmentlocally), such fallback is largely redundant. 
+
+* **No Cookie Fallback** - With Web Storage being [readily available](http://caniuse.com/namevalue-storage) in [all the browsers AngularJS officially supports](http://docs.angularjs.org/misc/faq#canidownloadthesourcebuildandhosttheangularjsenvironmentlocally), such fallback is largely redundant.
 
 Install
 =======
@@ -124,7 +124,12 @@ Todos
 
 * ngdoc Documentation
 * Namespace Support
-* Unit Tests
-* Grunt Tasks
+
+Contributors
+============
+* #Issue 41 - d10n - https://github.com/d10n
+* #Issue 60 - Dmitri Zaitsev - https://github.com/dmitriz
+* #Issue 63 - mrkoreye - https://github.com/mrkoreye
+* #Issue 68 - Ken Baltrinic - https://github.com/kbaltrinic
 
 Any contribution will be appreciated.

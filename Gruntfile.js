@@ -1,6 +1,11 @@
 'use strict';
 
 module.exports = function(grunt) {
+    var browsers = [
+        //'Chrome',
+        'PhantomJS',
+        //'Firefox'
+    ]
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -18,11 +23,7 @@ module.exports = function(grunt) {
 
                 frameworks: ['mocha'],
 
-                browsers: [
-                    //'Chrome',
-                    'PhantomJS',
-                    //'Firefox'
-                ],
+                browsers: browsers,
 
                 singleRun: true
             }
