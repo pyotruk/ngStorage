@@ -1,3 +1,10 @@
+
+### Disclaimer
+
+The original author of [ngStorage](https://github.com/gsklee/ngStorage) is [Gias Kay Lee](https://github.com/gsklee)
+
+As the repository was silent for about 11 months I decided to start a fork and began merging the pull requests into this fork.
+
 ngStorage
 =========
 
