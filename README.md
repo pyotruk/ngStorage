@@ -134,9 +134,9 @@ Todos
 
 Contributors
 ============
-* #Issue 41 - d10n - https://github.com/d10n
-* #Issue 60 - Dmitri Zaitsev - https://github.com/dmitriz
-* #Issue 63 - mrkoreye - https://github.com/mrkoreye
-* #Issue 68 - Ken Baltrinic - https://github.com/kbaltrinic
+* [#Issue 41](https://github.com/gsklee/ngStorage/pull/41) - d10n - https://github.com/d10n
+* [#Issue 60](https://github.com/gsklee/ngStorage/pull/60) - Dmitri Zaitsev - https://github.com/dmitriz
+* [#Issue 63](https://github.com/gsklee/ngStorage/pull/63) - mrkoreye - https://github.com/mrkoreye
+* [#Issue 68](https://github.com/gsklee/ngStorage/pull/68) - Ken Baltrinic - https://github.com/kbaltrinic
 
 Any contribution will be appreciated.
