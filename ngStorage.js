@@ -31,11 +31,12 @@
             '$rootScope',
             '$window',
             '$log',
-
+            '$timeout',
             function(
                 $rootScope,
                 $window,
-                $log
+                $log,
+                $timeout
             ){
                 var webStorage,
                   $storage = {
@@ -52,6 +53,22 @@
                             }
 
                             return $storage.$default(items);
+                        },
+                        $save: function() {
+                            $timeout.cancel(_debounce);
+                            if (!angular.equals($storage, _last$storage)) {
+                                angular.forEach($storage, function(v, k) {
+                                    angular.isDefined(v) && '$' !== k[0] && webStorage.setItem('ngStorage-' + k, angular.toJson(v));
+
+                                    delete _last$storage[k];
+                                });
+
+                                for (var k in _last$storage) {
+                                    webStorage.removeItem('ngStorage-' + k);
+                                }
+
+                                _last$storage = angular.copy($storage);
+                            }
                         }
                     },
                     _last$storage,
@@ -95,22 +112,8 @@
                 _last$storage = angular.copy($storage);
 
                 $rootScope.$watch(function() {
-                    _debounce || (_debounce = setTimeout(function() {
-                        _debounce = null;
-
-                        if (!angular.equals($storage, _last$storage)) {
-                            angular.forEach($storage, function(v, k) {
-                                angular.isDefined(v) && '$' !== k[0] && webStorage.setItem('ngStorage-' + k, angular.toJson(v));
-
-                                delete _last$storage[k];
-                            });
-
-                            for (var k in _last$storage) {
-                                webStorage.removeItem('ngStorage-' + k);
-                            }
-
-                            _last$storage = angular.copy($storage);
-                        }
+                    _debounce || (_debounce = $timeout(function() {
+                        $storage.$save();
                     }, 100));
                 });
 

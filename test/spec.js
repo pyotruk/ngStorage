@@ -17,6 +17,12 @@ describe('ngStorage', function() {
         expect($sessionStorage).not.to.equal(null);
     }));
 
+    var clearStorage = function($storage) {
+        delete $storage.$reset;
+        delete $storage.$default;
+        delete $storage.$save;
+    };
+
     describeStorageBehaviorFor('localStorage');
     describeStorageBehaviorFor('sessionStorage');
 
@@ -24,7 +30,7 @@ describe('ngStorage', function() {
 
         describe('$' + storageType, function() {
 
-            var $window, $rootScope, $storage;
+            var $window, $rootScope, $storage, $timeout;
 
             function initStorage(initialValues) {
 
@@ -54,10 +60,11 @@ describe('ngStorage', function() {
                     $provide.value('$window', $window);
                 });
 
-                inject(['$rootScope', '$' + storageType,
-                    function(_$rootScope_, _$storage_) {
+                inject(['$rootScope', '$' + storageType, '$timeout',
+                    function(_$rootScope_, _$storage_, _$timeout_) {
                         $rootScope = _$rootScope_;
                         $storage = _$storage_;
+                        $timeout = _$timeout_;
                     }
                 ]);
 
@@ -74,8 +81,7 @@ describe('ngStorage', function() {
                     'ngStorage-object': '{"string":"a string", "number": 123, "bool": true}'
                 });
 
-                delete $storage.$default;
-                delete $storage.$reset;
+                clearStorage($storage);
 
                 expect($storage).to.deep.equal({
                     string: 'a string',
@@ -87,52 +93,58 @@ describe('ngStorage', function() {
             });
 
             it('should add a key to window.' + storageType + ' when a key is added to $storage',
-                function(done) {
+                function() {
 
                 initStorage({});
                 $storage.newKey = 'some value';
                 $rootScope.$digest();
-
-                setTimeout(function() {
-                    expect($window[storageType].data)
-                        .to.deep.equal({'ngStorage-newKey': '"some value"'});
-                    done();
-                }, 125);
-
+                $timeout.flush();
+                expect($window[storageType].data)
+                    .to.deep.equal({'ngStorage-newKey': '"some value"'});
             });
 
             it('should update the associated key in window.' + storageType + ' when a key in $' +
-                storageType + ' is updated', function(done) {
+                storageType + ' is updated', function() {
 
                 initStorage({'ngStorage-existing': '"update me"'});
                 $storage.existing = 'updated';
                 $rootScope.$digest();
 
-                setTimeout(function() {
-                    expect($window[storageType].data)
-                        .to.deep.equal({'ngStorage-existing': '"updated"'});
-                    done();
-                }, 125);
+                $timeout.flush();
+                expect($window[storageType].data)
+                    .to.deep.equal({'ngStorage-existing': '"updated"'});
+            });
 
+            it('should update the associated key in window.' + storageType + ' when a key in $' +
+                storageType + ' is updated instantanious when $save is called', function() {
+
+                initStorage({'ngStorage-existing': '"update me"'});
+                $storage.existing = 'updated';
+                $rootScope.$digest();
+
+                expect($window[storageType].data)
+                    .to.deep.equal({'ngStorage-existing': '"update me"'});
+
+                $storage.$save();
+
+                expect($window[storageType].data)
+                    .to.deep.equal({'ngStorage-existing': '"updated"'});
             });
 
             it('should delete the associated key from window.' + storageType + ' when a key in $' +
-                storageType + ' is deleted', function(done) {
+                storageType + ' is deleted', function() {
 
                 initStorage({'ngStorage-existing': '"delete me"'});
                 delete $storage.existing;
                 $rootScope.$digest();
-
-                setTimeout(function() {
-                    expect($window[storageType].data).to.deep.equal({});
-                    done();
-                }, 125);
+                $timeout.flush();
+                expect($window[storageType].data).to.deep.equal({});
 
             });
 
             describe('when $reset is called with no arguments', function() {
 
-                beforeEach(function(done) {
+                beforeEach(function() {
 
                     initStorage({
                         nonNgStorage: 'this should not be changed',
@@ -141,7 +153,7 @@ describe('ngStorage', function() {
 
                     $storage.$reset();
                     $rootScope.$digest();
-                    setTimeout(done, 125);
+                    $timeout.flush();
                 });
 
                 it('should delete all ngStorage- keys from window.' + storageType, function() {
@@ -154,8 +166,8 @@ describe('ngStorage', function() {
 
                 it('should delete all keys from $' + storageType, function() {
 
-                    delete $storage.$default
-                    delete $storage.$reset
+                    clearStorage($storage);
+
                     expect($storage).to.deep.equal({});
 
                 });
@@ -164,7 +176,7 @@ describe('ngStorage', function() {
 
             describe('when $reset is called with an object', function() {
 
-                beforeEach(function(done) {
+                beforeEach(function() {
 
                     initStorage({
                         nonNgStorage: 'this should not be changed',
@@ -173,7 +185,7 @@ describe('ngStorage', function() {
 
                     $storage.$reset({some: 'value'});
                     $rootScope.$digest();
-                    setTimeout(done, 125);
+                    $timeout.flush();
                 });
 
                 it('should reset the ngStorage- keys on window.' + storageType +
@@ -188,8 +200,8 @@ describe('ngStorage', function() {
 
                 it('should reset $' + storageType + ' to match the object', function() {
 
-                    delete $storage.$default
-                    delete $storage.$reset
+                    clearStorage($storage);
+
                     expect($storage).to.deep.equal({some: 'value'});
 
                 });
@@ -198,7 +210,7 @@ describe('ngStorage', function() {
 
             describe('when $default is called', function() {
 
-                beforeEach(function(done) {
+                beforeEach(function() {
 
                     initStorage({
                         nonNgStorage: 'this should not be changed',
@@ -211,7 +223,7 @@ describe('ngStorage', function() {
                     });
 
                     $rootScope.$digest();
-                    setTimeout(done, 125);
+                    $timeout.flush();
                 });
 
                 it('should should add any missing ngStorage- keys on window.' + storageType,
