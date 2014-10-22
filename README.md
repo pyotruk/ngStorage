@@ -140,9 +140,11 @@ Todos
 
 * ngdoc Documentation
 * Namespace Support
+* Version Control - Changes need to change the version numbering
 
 Contributors
 ============
+* [#Issue 39](https://github.com/gsklee/ngStorage/issues/39) - Tobias Kopelke - The reason for the fork
 * [#Issue 41](https://github.com/gsklee/ngStorage/pull/41) - d10n - https://github.com/d10n
 * [#Issue 60](https://github.com/gsklee/ngStorage/pull/60) - Dmitri Zaitsev - https://github.com/dmitriz
 * [#Issue 63](https://github.com/gsklee/ngStorage/pull/63) - mrkoreye - https://github.com/mrkoreye
