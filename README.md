@@ -116,6 +116,15 @@ $localStorage.$reset();
 > });
 > ```
 
+### Saving
+
+When using the module you should not care if or when something is written to the browsers storage engine. However, if you have a critical part, when you need to know the exact timing, you can use the `$save()` method:
+
+```javascript
+$localStorage.value = 100;
+$localStorage.$save()
+````
+
 ### Permitted Values | [Demo](http://plnkr.co/edit/n0acYLdhk3AeZmPOGY9Z?p=preview)
 
 You can store anything except those [not supported by JSON](http://www.json.org/js.html):
