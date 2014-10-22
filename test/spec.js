@@ -3,20 +3,6 @@
 describe('ngStorage', function() {
     var expect = chai.expect;
 
-    beforeEach(module('ngStorage'));
-
-    it('should contain a $localStorage service', inject(function(
-        $localStorage
-    ) {
-        expect($localStorage).not.to.equal(null);
-    }));
-
-    it('should contain a $sessionStorage service', inject(function(
-        $sessionStorage
-    ) {
-        expect($sessionStorage).not.to.equal(null);
-    }));
-
     var clearStorage = function($storage) {
         delete $storage.$reset;
         delete $storage.$default;
@@ -30,7 +16,15 @@ describe('ngStorage', function() {
 
         describe('$' + storageType, function() {
 
-            var $window, $rootScope, $storage, $timeout;
+            var $window, $rootScope, $storage, $timeout, $storageProvider;
+
+            beforeEach(module('ngStorage', [
+                '$' + storageType + 'Provider',
+                function(_$storageProvider_) {
+                    $storageProvider = _$storageProvider_;
+                    $storageProvider.setPrefix('ngStorage-');
+                }
+            ]));
 
             function initStorage(initialValues) {
 
@@ -70,6 +64,10 @@ describe('ngStorage', function() {
 
             }
 
+            it('should contain a ' + storageType + ' service', function() {
+                expect(storageType).not.to.equal(null);
+            });
+
             it('should, upon loading, contain a value for each ngStorage- key in window.' +
                 storageType, function() {
 
@@ -80,6 +78,33 @@ describe('ngStorage', function() {
                     'ngStorage-bool': 'true',
                     'ngStorage-object': '{"string":"a string", "number": 123, "bool": true}'
                 });
+
+                clearStorage($storage);
+
+                expect($storage).to.deep.equal({
+                    string: 'a string',
+                    number: 123,
+                    bool: true,
+                    object: { string:'a string', number: 123, bool: true }
+                });
+
+            });
+
+
+
+            it('should be able to change the prefix to "anything-" in window.' +
+                storageType, function() {
+
+                $storageProvider.setPrefix('anything-');
+
+                initStorage({
+                    nonNgStorage: 'this should be ingored',
+                    'anything-string': '"a string"',
+                    'anything-number': '123',
+                    'anything-bool': 'true',
+                    'anything-object': '{"string":"a string", "number": 123, "bool": true}'
+                });
+
 
                 clearStorage($storage);
 
