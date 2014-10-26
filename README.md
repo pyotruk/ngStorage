@@ -125,6 +125,17 @@ $localStorage.value = 100;
 $localStorage.$save()
 ````
 
+### Supported
+
+The $storage will expose the state of support for the browsers storage.
+
+```javascript
+$localStorage.$supported === false;
+$sessionStorage.$supported === false;
+````
+
+If `$supported` is false your data cannot be saved.
+
 ### Permitted Values | [Demo](http://plnkr.co/edit/n0acYLdhk3AeZmPOGY9Z?p=preview)
 
 You can store anything except those [not supported by JSON](http://www.json.org/js.html):
