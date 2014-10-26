@@ -48,7 +48,29 @@
                     $log,
                     $timeout
                 ){
-                    var webStorage,
+
+                    function getStorageImplementation() {
+                        var storageImpl = $window[storageType];
+
+                        // When Safari (OS X or iOS) is in private browsing mode, it appears as though localStorage
+                        // is available, but trying to call .setItem throws an exception below:
+                        // "QUOTA_EXCEEDED_ERR: DOM Exception 22: An attempt was made to add something to storage that exceeded the quota."
+                        if (storageImpl && storageType === 'localStorage') {
+                            var key = '__' + Math.round(Math.random() * 1e7);
+
+                            try {
+                                storageImpl.setItem(key, key);
+                                storageImpl.removeItem(key);
+                            } catch (err) {
+                                $log.warn('This browser does not support Web Storage!');
+                                storageImpl = undefined;
+                            }
+                        }
+
+                        return storageImpl;
+                    }
+
+                    var webStorage = getStorageImplementation(),
                       $storage = {
                             $default: function(items) {
                                 for (var k in items) {
@@ -79,21 +101,14 @@
 
                                     _last$storage = angular.copy($storage);
                                 }
-                            }
+                            },
+                            $supported: !!webStorage
                         },
                         _last$storage,
                         _debounce;
 
                     // #9: Assign a placeholder object if Web Storage is unavailable to prevent breaking the entire AngularJS app
-                    try {
-                        webStorage = $window[storageType];
-                        // Checking webStorage.length is necessary here because Firefox allows webStorage = $window[storageType];
-                        // for sessionStorage, even if the user has blocked all cookies/storage. However, security error then shows up when
-                        // webStorage.length is called
-                        webStorage.length;
-                    } catch (e) {
-                        $log.warn('This browser does not support Web Storage!');
-
+                    if(!webStorage) {
                         var data = {},
                             undef;
                         webStorage = {
