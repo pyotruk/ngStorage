@@ -1,5 +1,7 @@
 {
-    "name": "ngstorage",
+    "name": "pyotruk-ngstorage",
+    "description": "ngStorage forked from raynode",
+    "version": "0.3.1",
     "main": "./ngStorage.js",
     "keywords": [
         "angular",
